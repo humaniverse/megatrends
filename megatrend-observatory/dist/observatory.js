@@ -19,21 +19,22 @@
           "'": '&#39;',
         })[c],
     );
-  const validTheme = (id) => threadById.has(id) || id === 'other';
   const themeName = (id) => threadById.get(id)?.label || 'Other themes';
-  const themeColour = (id) => threadById.get(id)?.color || '#857782';
+  const cataloguePath = 'history/index.html';
+  const defaultComparison = comparisonLink(bookDefault, 'cifs-2026');
   const icon =
     '<svg class="fiber-icon" viewBox="0 0 26 20" aria-hidden="true"><path d="M1 6c4 0 5 6 10 6s5-8 10-8c3 0 4 3 2 5-3 3-7 1-9 0M1 10c4 0 5 6 10 6"/></svg>';
   let title = '';
   let previousRoute = '';
-  let saved = [];
-  try {
-    const stored = JSON.parse(
-      localStorage.getItem('observatory.threads') || '[]',
-    );
-    if (Array.isArray(stored))
-      saved = stored.filter((id) => threadById.has(id));
-  } catch {}
+  let saved = readSaved('observatory.threads').filter((id) => threadById.has(id));
+  function readSaved(key) {
+    try {
+      const stored = JSON.parse(localStorage.getItem(key) || '[]');
+      return Array.isArray(stored) ? stored : [];
+    } catch {
+      return [];
+    }
+  }
   const link = (href, label, classes = '') =>
     '<a class="' +
     classes +
@@ -42,6 +43,27 @@
     '">' +
     escape(label) +
     '</a>';
+  function comparisonLink(first, second, theme) {
+    const query = new URLSearchParams({ view: 'compare', first, second });
+    if (theme) query.set('theme', theme);
+    return cataloguePath + '?' + query.toString() + '#catalogue-views';
+  }
+  function publicationLink(book, evidence) {
+    const entry = evidence ? book.entries.findIndex((item) => item.text === evidence) : -1;
+    return cataloguePath + '#' + book.id + (entry >= 0 ? '--trend-' + (entry + 1) : '');
+  }
+  function related(items, label = 'Related reading') {
+    return '<nav class="related-reading" aria-label="' + escape(label) + '"><strong>' +
+      escape(label) + '</strong><ul>' +
+      items.map(([href, name]) => '<li>' + link(href, name) + '</li>').join('') +
+      '</ul></nav>';
+  }
+  const populationReading = [
+    ['#thread/population', 'Follow the Population & ageing thread'],
+    [publicationLink(bookById.get('un-wpp-2024'), threadById.get('population').evidence['un-wpp-2024']), 'Read the 2024 population finding'],
+    ['priorities/index.html#demographic-bifurcation', 'Read about demographic bifurcation'],
+    ['scenarios/index.html#demographic-inversion', 'Explore the 2040 demographic scenario'],
+  ];
   function weave(seed, yarns, face = 'front', highlight = '') {
     return (
       '<img class="weave" alt="" width="354" height="156" data-weave="' +
@@ -55,19 +77,14 @@
       '">'
     );
   }
-  function bookWeave(book, highlight = '') {
-    const themes = [
-      ...new Set(
-        book.entries.flatMap((entry) => entry.themes || [entry.theme]),
-      ),
-    ];
-    return weave(book.id, themes, 'front', highlight);
-  }
   function header(back, label, heading, description = '') {
     title = heading;
+    const separator = '<span aria-hidden="true">/</span>';
     return (
-      '<div class="wrap read-head">' +
-      link(back, label, 'back') +
+      '<div class="wrap read-head"><nav class="site-crumbs" aria-label="Breadcrumb">' +
+      link('#home', 'Home') + separator +
+      (back === '#home' ? '' : link(back, label) + separator) +
+      '<span aria-current="page">' + escape(heading) + '</span></nav>' +
       '<h1>' +
       escape(heading) +
       '</h1>' +
@@ -107,10 +124,11 @@
   function home() {
     title = 'Megatrend Observatory';
     return (
-      '<section class="night hero"><div class="hero-copy"><h1>How ideas of the future change</h1><p>Follow a thread through four decades of books and reports about the forces shaping our lives.</p><div class="actions"><a class="primary" href="#thread/technology">' +
+      '<section class="night hero"><div class="hero-copy"><h1>How ideas of the future change</h1><p>Follow long-term changes through four decades of books and reports, then see how they could shape the future.</p><div class="actions"><a class="primary" href="#loom">' +
       icon +
-      'Follow a thread</a>' +
-      link('#book', 'Open the swatch book', 'quiet-action') +
+      'Follow a theme</a>' +
+      link(defaultComparison, 'Compare 1982 with today', 'quiet-action') +
+      link('#futures', 'Test an assumption', 'quiet-action') +
       '</div></div><div class="hero-art" role="img" aria-label="A close view of raspberry, indigo and gold Jacquard cloth with loose yarn at its edge"></div></section>' +
       '<section class="wrap section"><div class="section-title"><div><h2>Pick up a thread</h2><p>Start with a question that draws you in. See how earlier authors understood it.</p></div>' +
       link('#loom', 'All eight threads', 'action') +
@@ -119,18 +137,18 @@
         .map((id) => threadLink(threadById.get(id)))
         .join('') +
       '</div></section>' +
-      '<section class="white"><div class="wrap invitation"><div class="book-art" role="img" aria-label="An archive of woven samples, open at 1982 and the 2020s"></div><div><h2>The swatch book</h2><p>John Naisbitt saw an information society taking shape in 1982. What did later authors see? Lay two publications side by side and examine their choices.</p><div class="actions">' +
+      '<section class="white"><div class="wrap invitation"><div class="book-art" role="img" aria-label="An archive of woven samples, open at 1982 and the 2020s"></div><div><h2>Books &amp; reports</h2><p>John Naisbitt saw an information society taking shape in 1982. What did later authors see? Lay two publications side by side and examine their choices.</p><div class="actions">' +
       link(
-        '#compare/' + bookDefault + '/cifs-2026',
+        defaultComparison,
         'Compare two publications',
         'primary',
       ) +
-      link('#book', 'Browse the catalogue', 'action') +
+      link(cataloguePath, 'Browse by decade', 'action') +
       '</div></div></div></section>' +
       '<section class="wrap section chapter-menu">' +
       [
         [
-          '#watch',
+          'priorities/index.html',
           'Six to watch',
           'Which changes deserve a closer look, and what makes them new?',
         ],
@@ -141,7 +159,7 @@
         ],
         [
           'explorer/index.html',
-          'The horizon explorer',
+          'By year',
           'Move between 1980 and 2050 with six illustrated trends.',
         ],
       ]
@@ -158,10 +176,12 @@
       header(
         '#home',
         'Home',
-        'The loom',
+        'Explore by theme',
         'Eight themes recur across the collection. Each thread follows a changing idea through the words and concerns of its time.',
       ) +
-      '<div class="wrap section"><div class="thread-shelf">' +
+      '<div class="wrap section"><p class="theme-example">' +
+      link('#thread/technology', 'Follow the rise of machine autonomy', 'action') +
+      '</p><div class="thread-shelf">' +
       threads.map(threadLink).join('') +
       '</div><div class="page-end">' +
       link('synthesis/index.html', 'Read the historical synthesis', 'action') +
@@ -183,8 +203,8 @@
       witnesses
         .map(
           (b) =>
-            '<a href="#publication/' +
-            b.id +
+            '<a href="' +
+            publicationLink(b, t.evidence[b.id]) +
             '"><b>' +
             b.year +
             '</b><span>' +
@@ -225,7 +245,7 @@
                 escape(entry.detail) +
                 '</p>'
               : '<p>' + escape(b.summary) + '</p>') +
-            link('#publication/' + b.id, 'Open publication') +
+            link(publicationLink(b, t.evidence[b.id]), 'Read the finding in the publication') +
             '</section>'
           );
         })
@@ -237,7 +257,7 @@
       '</p></details>';
     const faceHref = '#thread/' + t.id + (back ? '' : '/reverse');
     return (
-      header('#loom', 'All threads', t.label) +
+      header('#loom', 'Explore by theme', t.label) +
       '<div class="wrap section read-grid" style="--yarn:' +
       t.color +
       '"><aside class="sample-board"><h2>' +
@@ -248,7 +268,7 @@
       faceHref +
       '">' +
       icon +
-      (back ? 'Turn to the story' : 'Turn the cloth over') +
+      (back ? 'Back to the story' : 'See the sources') +
       '</a><button class="button-line" data-save="' +
       t.id +
       '" aria-pressed="' +
@@ -261,154 +281,16 @@
       (back ? reverse : overview) +
       '<div class="page-end">' +
       link(
-        '#compare/' +
-          witnesses[0].id +
-          '/' +
-          witnesses[witnesses.length - 1].id +
-          '/' +
-          t.id,
+        comparisonLink(witnesses[0].id, witnesses[witnesses.length - 1].id, t.id),
         'Compare the first and last editions',
         'action',
       ) +
-      '</div></article></div>'
-    );
-  }
-  function bookRow(b) {
-    return (
-      '<a class="row-link" href="#publication/' +
-      b.id +
-      '">' +
-      bookWeave(b) +
-      '<time>' +
-      b.year +
-      '</time><span><strong>' +
-      escape(b.title) +
-      '</strong><small>' +
-      escape(b.author) +
-      '</small></span><span class="open">Open edition</span></a>'
-    );
-  }
-  function catalogue(q) {
-    const decade = q.get('decade') || '';
-    return (
-      header(
-        '#home',
-        'Home',
-        'The swatch book',
-        'Browse the 24 publications. Their scope ranges from one country’s changing habits to the world economy.',
-      ) +
-      '<div class="wrap"><div class="actions">' +
-      link(
-        '#compare/' + bookDefault + '/cifs-2026',
-        'Compare two publications',
-        'primary',
-      ) +
-      link('history/index.html', 'Read the decade histories', 'action') +
-      '</div><div class="toolbar"><label class="control">Search the collection<input id="book-term" type="search" placeholder="Title, author or theme" value="' +
-      escape(q.get('q') || '') +
-      '"></label><label class="control">Decade<select id="book-decade"><option value="">All decades</option>' +
-      Object.keys(window.OBS_ERAS)
-        .map(
-          (d) =>
-            '<option ' +
-            (d === decade ? 'selected ' : '') +
-            'value="' +
-            d +
-            '">' +
-            d +
-            's</option>',
-        )
-        .join('') +
-      '</select></label></div><p class="status" role="status" id="book-status"></p><div id="book-results" class="book-list"></div></div>'
-    );
-  }
-  function filterBooks(updateAddress) {
-    const input = document.getElementById('book-term');
-    if (!input) return;
-    const value = input.value.trim().toLocaleLowerCase();
-    const decade = document.getElementById('book-decade').value;
-    const matches = books.filter(
-      (b) =>
-        (!decade || Math.floor(b.year / 10) * 10 === Number(decade)) &&
-        (!value ||
-          [
-            b.title,
-            b.author,
-            b.lens,
-            b.summary,
-            ...b.entries.flatMap((e) => [
-              e.text,
-              e.detail,
-              ...(e.themes || [e.theme]).map(themeName),
-            ]),
-          ]
-            .join(' ')
-            .toLocaleLowerCase()
-            .includes(value)),
-    );
-    if (updateAddress && location.protocol !== 'file:') {
-      const params = new URLSearchParams();
-      if (value) params.set('q', input.value);
-      if (decade) params.set('decade', decade);
-      history.replaceState(
-        null,
-        '',
-        '#book' + (params.size ? '?' + params : ''),
-      );
-    }
-    document.getElementById('book-status').textContent =
-      matches.length + ' of ' + books.length + ' publications';
-    const results = document.getElementById('book-results');
-    results.innerHTML = matches.length
-      ? matches.map(bookRow).join('')
-      : '<p class="empty">No editions matched. <button class="button-line" data-clear>Clear search and decade</button></p>';
-    window.drawWeaves(results);
-  }
-  function entries(items, theme) {
-    return (
-      '<ul class="entries">' +
-      items
-        .map(
-          (e) =>
-            '<li class="' +
-            ((e.themes || [e.theme]).includes(theme) ? 'matched' : '') +
-            '"><h4>' +
-            escape(e.text) +
-            '</h4><p>' +
-            escape(e.detail) +
-            '</p></li>',
-        )
-        .join('') +
-      '</ul>'
-    );
-  }
-  function publication(bid) {
-    const b = bookById.get(bid);
-    if (!b) return missing();
-    return (
-      header('#book', 'Swatch book', b.title, b.author + ' / ' + b.year) +
-      '<div class="wrap reader"><article class="book-reading">' +
-      bookWeave(b) +
-      '<p class="credit">' +
-      escape(b.lens) +
-      '</p><p class="deck">' +
-      escape(b.summary) +
-      '</p><div class="page-end">' +
-      link(b.url, 'Read the original source', 'action') +
-      link(
-        '#compare/' +
-          b.id +
-          '/' +
-          (b.id === bookDefault ? 'cifs-2026' : bookDefault),
-        'Compare with another edition',
-        'action',
-      ) +
-      '</div>' +
-      (b.entries.length
-        ? '<h2 class="text-heading">Inside this edition</h2>' +
-          entries(b.entries)
-        : '<p>This methods review examines how megatrends are identified.</p>') +
-      '</article></div>'
+      '</div>' + related([
+        ['synthesis/index.html#thread-' + t.original.toLowerCase(), 'Read this thread in the historical synthesis'],
+        ...(t.id === 'population' ? populationReading.slice(1) : future.watch
+          .filter((item) => item.theme === t.id)
+          .map((item) => ['priorities/index.html#' + item.originalId, item.title])),
+      ]) + '</article></div>'
     );
   }
   function options(records, selected, getLabel) {
@@ -424,78 +306,6 @@
           '</option>',
       )
       .join('');
-  }
-  function compare(left, right, filter) {
-    const a = bookById.get(left) || books[0],
-      b = bookById.get(right) || bookById.get('cifs-2026');
-    filter = validTheme(filter) ? filter : '';
-    const pane = (book, side, label) => {
-      const lines = filter
-        ? book.entries.filter((e) => (e.themes || [e.theme]).includes(filter))
-        : book.entries;
-      return (
-        '<section class="leaf" id="page-' +
-        side +
-        '" tabindex="-1"><button class="switch-leaf" data-other-leaf="' +
-        (side === 'left' ? 'right' : 'left') +
-        '">Read the other edition</button><label class="control">' +
-        label +
-        '<select id="pick-' +
-        side +
-        '">' +
-        options(
-          books,
-          book.id,
-          (x) => x.year + ' / ' + x.author + ' / ' + x.title,
-        ) +
-        '</select></label>' +
-        bookWeave(book, filter) +
-        '<div class="credit">' +
-        book.year +
-        ' / ' +
-        escape(book.author) +
-        '</div><h2>' +
-        escape(book.title) +
-        '</h2><p>' +
-        escape(book.summary) +
-        '</p><h3>' +
-        (filter ? escape(themeName(filter)) : 'Themes in this edition') +
-        '</h3>' +
-        (lines.length
-          ? entries(lines, filter)
-          : '<p class="empty">' +
-            (book.entries.length
-              ? 'This edition has no entry assigned to this thread.'
-              : 'This methods review does not propose a list of trends.') +
-            '</p>') +
-        '<div class="page-end">' +
-        link('#publication/' + book.id, 'Open full edition', 'action') +
-        link(book.url, 'Source', 'action') +
-        '</div></section>'
-      );
-    };
-    return (
-      header(
-        '#book',
-        'Swatch book',
-        'Two editions, side by side',
-        'Choose a thread to see where the two editions speak to the same question. A gap can be as revealing as a match.',
-      ) +
-      '<div class="wrap"><div class="toolbar"><label class="control big-select">Trace a theme<select id="pick-filter"><option value="">All themes</option>' +
-      options(
-        [...threads, { id: 'other', label: 'Other themes' }],
-        filter,
-        (t) => t.label,
-      ) +
-      '</select></label></div><div class="spread" style="--yarn:' +
-      themeColour(filter) +
-      '">' +
-      pane(a, 'left', 'Left-hand edition') +
-      pane(b, 'right', 'Right-hand edition') +
-      '</div><div class="page-end">' +
-      link('#book', 'Return to the catalogue', 'action') +
-      '</div></div>'
-    );
   }
   const watchYarns = {
     'autonomous-infrastructure': ['technology', 'networks'],
@@ -567,7 +377,7 @@
           'Read the full analysis and two further themes',
           'action',
         ) +
-        link('#next', 'Explore the next generation', 'action') +
+        link('next/index.html', 'Explore the next generation', 'action') +
         '</div></div>'
       );
     }
@@ -601,40 +411,10 @@
       escape(w.question) +
       '</div><div class="page-end">' +
       link('#thread/' + w.theme, 'Follow the historical thread', 'action') +
+      link('priorities/index.html#' + w.originalId, 'Read the full analysis', 'action') +
       link('#watch', 'See the six studies', 'action') +
-      '</div></article></div>'
-    );
-  }
-  function nextPage() {
-    return (
-      header(
-        '#watch',
-        'Six to watch',
-        'The next generation',
-        'Four candidates at the unfinished edge of the collection. Each is a proposition you can test.',
-      ) +
-      '<div class="wrap reader">' +
-      future.candidates
-        .map(
-          (c) =>
-            '<details class="note"><summary>' +
-            escape(c.title) +
-            '</summary><p>' +
-            escape(c.baseline) +
-            '</p><p>' +
-            escape(c.implication) +
-            '</p><p><strong>What to watch</strong> ' +
-            escape(c.signal) +
-            '</p><p>' +
-            escape(c.question) +
-            '</p>' +
-            sources(c.sources) +
-            '</details>',
-        )
-        .join('') +
-      '<div class="page-end">' +
-      link('next/index.html', 'Read the next-generation chapter', 'action') +
-      '</div></div>'
+      '</div>' + (w.theme === 'population' ? related([populationReading[1], populationReading[3]]) : '') +
+      '</article></div>'
     );
   }
   const assumptionYarns = {
@@ -708,8 +488,8 @@
       routes +
       '</ul><div class="page-end">' +
       link(
-        'scenarios/index.html',
-        'Read the complete scenario chapter',
+        'scenarios/index.html#' + a.originalId,
+        'Read this assumption in the scenario chapter',
         'action',
       ) +
       '</div></div>'
@@ -739,7 +519,10 @@
             '<li>' + link('#futures/' + a.id + '/loose', a.title) + '</li>',
         )
         .join('') +
-      '</ul></div>'
+      '</ul>' + related([
+        ['scenarios/index.html#' + s.originalId, 'Read this scenario in the complete chapter'],
+        ...(s.originalId === 'demographic-inversion' ? populationReading.slice(0, 3) : []),
+      ]) + '</div>'
     );
   }
   function guide() {
@@ -759,12 +542,12 @@
         'What is strategic foresight?',
         'Strategic foresight explores several plausible futures to help people make choices today. Ask what might change course, who would experience the change first and what choices they have.',
       ) +
-      '<section><h3>How to read the cloth</h3><p>Each colour follows a theme through the collection. A swatch combines colours from the themes assigned to a publication. Its pattern identifies the edition. The amount of each colour carries no statistical weight.</p><p>Turn a thread over to see the publications behind the interpretation. Catalogue entries paraphrase the original works. Follow each edition’s source link to read it in context.</p></section>' +
+      '<section><h3>How to read the cloth</h3><p>Each colour follows a theme through the collection. A swatch combines colours from the themes assigned to a publication. Its pattern identifies the edition. The amount of each colour carries no statistical weight.</p><p>Choose <strong>See the sources</strong> to turn a thread over and reveal the publications behind it. Catalogue entries paraphrase the original works. Follow each edition’s source link to read it in context.</p></section>' +
       '<section><h3>Choose a way in</h3><ul class="plain-list">' +
       [
         ['#thread/technology', 'Follow the information society from 1982'],
         [
-          '#compare/' + bookDefault + '/cifs-2026',
+          defaultComparison,
           'Compare a book and a contemporary report',
         ],
         [
@@ -775,7 +558,7 @@
           'synthesis/index.html#method',
           'See how researchers identify megatrends',
         ],
-        ['#next', 'Consider four candidates for the next generation'],
+        ['next/index.html', 'Consider four candidates for the next generation'],
       ]
         .map(([h, l]) => '<li>' + link(h, l) + '</li>')
         .join('') +
@@ -783,14 +566,16 @@
     );
   }
   function savedPage() {
+    const savedTrendIds = new Set(readSaved('longview.saved'));
+    const trends = TRENDS.filter((trend) => savedTrendIds.has(trend.id));
     return (
       header(
-        '#loom',
-        'The loom',
-        'Saved threads',
-        'Revisit the threads you have marked on this device.',
+        '#home',
+        'Home',
+        'Saved',
+        'Revisit the themes and illustrated trends you’ve marked on this device.',
       ) +
-      '<div class="wrap reader">' +
+      '<div class="wrap reader"><h2 class="text-heading">Saved threads</h2>' +
       (saved.length
         ? '<ul class="saved-list">' +
           saved
@@ -807,9 +592,16 @@
             .join('') +
           '</ul>'
         : '<p class="empty">Follow a thread and choose <strong>Save thread</strong> to keep it here.</p>') +
+      link('#loom', 'Browse themes', 'action') +
+      '<h2 class="text-heading">Saved trends from By year</h2>' +
+      (trends.length
+        ? '<ul class="saved-list">' + trends.map((trend) => '<li>' +
+          link('explorer/index.html#trend/' + trend.id, trend.name) + '</li>').join('') + '</ul>'
+        : '<p class="empty">Save a trend in the year explorer to see it here.</p>') +
       '<div class="page-end">' +
-      link('#loom', 'Browse threads', 'action') +
-      link('explorer/index.html#saved', 'Open saved horizon trends', 'action') +
+      (trends.length
+        ? link('explorer/index.html#saved', 'Manage saved trends', 'action')
+        : link('explorer/index.html', 'Explore by year', 'action')) +
       '</div></div>'
     );
   }
@@ -845,6 +637,15 @@
       main.focus();
       return;
     }
+    if (page === 'book' || page === 'publication' || page === 'compare' || page === 'next') {
+      let target = cataloguePath;
+      if (page === 'book' && q.size) target += '?' + q.toString();
+      if (page === 'publication' && bookById.has(id)) target = publicationLink(bookById.get(id));
+      if (page === 'compare') target = comparisonLink(id || bookDefault, extra || 'cifs-2026', filter);
+      if (page === 'next') target = 'next/index.html';
+      location.replace(target);
+      return;
+    }
     if (
       page === 'trend' ||
       page === 'index' ||
@@ -864,7 +665,6 @@
       previousPage === page &&
       (((page === 'thread' || page === 'watch' || page === 'futures') &&
         previousRoute.split('/')[1] === id) ||
-        page === 'compare' ||
         (page === 'futures' && controlId === 'pick-assumption'));
     const scroll = window.scrollY;
     let content;
@@ -878,20 +678,8 @@
       case 'thread':
         content = threadPage(id, extra === 'reverse');
         break;
-      case 'book':
-        content = catalogue(q);
-        break;
-      case 'publication':
-        content = publication(id);
-        break;
-      case 'compare':
-        content = compare(id, extra, filter);
-        break;
       case 'watch':
         content = watchPage(id, extra === 'earlier');
-        break;
-      case 'next':
-        content = nextPage();
         break;
       case 'futures':
         content = futuresPage(id, extra === 'loose');
@@ -916,18 +704,12 @@
     const navPage =
       {
         thread: 'loom',
-        publication: 'book',
-        compare: 'book',
+        watch: 'priorities',
         scenario: 'futures',
-        next: 'watch',
       }[page] || page;
-    document.querySelectorAll('#menu a').forEach((a) => {
-      if (a.hash === '#' + navPage) a.setAttribute('aria-current', 'page');
-      else a.removeAttribute('aria-current');
-    });
-    if (page === 'book') filterBooks(false);
+    const navSection = { loom: 'explore', priorities: 'change' }[navPage] || navPage;
+    window.setObservatorySection(navSection, navPage);
     window.drawWeaves(main);
-    setMenu(false);
     if (keepScroll) {
       const replacement =
         (controlId && document.getElementById(controlId)) ||
@@ -942,12 +724,6 @@
     }
     previousRoute = [page, id || '', extra || ''].join('/');
   }
-  function setMenu(open) {
-    document.getElementById('menu').classList.toggle('shown', open);
-    document
-      .querySelector('.menu-toggle')
-      .setAttribute('aria-expanded', String(open));
-  }
   function storeSaved() {
     try {
       localStorage.setItem('observatory.threads', JSON.stringify(saved));
@@ -956,22 +732,11 @@
   document.addEventListener('click', (event) => {
     const target = event.target.closest('button,a');
     if (!target) return;
-    if (target.dataset.otherLeaf) {
-      const leaf = document.getElementById('page-' + target.dataset.otherLeaf);
-      leaf?.focus({ preventScroll: true });
-      leaf?.scrollIntoView({ block: 'start' });
-      return;
-    }
     if (target.matches('.skip')) {
       event.preventDefault();
       main.focus();
       return;
     }
-    if (target.matches('.menu-toggle')) {
-      setMenu(target.getAttribute('aria-expanded') === 'false');
-      return;
-    }
-    if (target.matches('#menu a')) setMenu(false);
     if (target.dataset.save) {
       const id = target.dataset.save;
       saved = saved.includes(id)
@@ -987,44 +752,16 @@
       render();
       (main.querySelector('[data-remove]') || main).focus();
     }
-    if (target.hasAttribute('data-clear')) {
-      document.getElementById('book-term').value = '';
-      document.getElementById('book-decade').value = '';
-      filterBooks(true);
-      document.getElementById('book-term').focus();
-    }
-  });
-  document.addEventListener('keydown', (event) => {
-    if (
-      event.key === 'Escape' &&
-      document.getElementById('menu').classList.contains('shown')
-    ) {
-      setMenu(false);
-      document.querySelector('.menu-toggle').focus();
-    }
-  });
-  document.addEventListener('input', (event) => {
-    if (event.target.id === 'book-term') filterBooks(true);
   });
   document.addEventListener('change', (event) => {
-    if (event.target.id === 'book-decade') {
-      filterBooks(true);
-      return;
-    }
     if (event.target.id === 'pick-assumption') {
       location.hash = 'futures/' + event.target.value;
       return;
     }
-    if (['pick-left', 'pick-right', 'pick-filter'].includes(event.target.id)) {
-      const value = (id) => document.getElementById('pick-' + id).value;
-      location.hash =
-        'compare/' +
-        value('left') +
-        '/' +
-        value('right') +
-        (value('filter') ? '/' + value('filter') : '');
-    }
   });
   window.addEventListener('hashchange', render);
+  window.addEventListener('pageshow', (event) => {
+    if (event.persisted && readRoute().page === 'saved') render();
+  });
   render();
 })();

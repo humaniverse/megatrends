@@ -7,6 +7,7 @@
   colours.other = '#887f88';
   const ground = '#e9e2d6';
   const ink = '#30203c';
+  const fallback = new URL('assets/jacquard.webp', document.currentScript.src).href;
   const cache = new Map();
   const shades = new Map();
 
@@ -68,7 +69,7 @@
     tile.width = cols * cell + margin * 2;
     tile.height = rows * cell + margin * 2;
     const ctx = tile.getContext('2d');
-    if (!ctx) return 'assets/jacquard.webp';
+    if (!ctx) return fallback;
     const yarns = keys
       .filter((k) => colours[k])
       .map((k) => (highlight && k !== highlight ? '#b5aab9' : colours[k]));

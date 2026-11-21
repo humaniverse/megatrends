@@ -117,6 +117,54 @@
 .horizon-page .guide-head .kicker { color: #dccbdf; }
 .horizon-page .detail-years button { color: var(--ink); }
 .horizon-page #panel { background: var(--leaf); color: var(--ink); }
+.catalogue-modes {
+  display: flex;
+  gap: 20px;
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 26px;
+}
+.enhanced .catalogue-modes.js-only { display: flex !important; }
+.enhanced .js-only[hidden] { display: none !important; }
+.catalogue-modes a {
+  padding: 10px 3px;
+  font-weight: 600;
+}
+.catalogue-modes a[aria-current] { box-shadow: inset 0 -3px var(--berry); color: var(--berry); }
+.catalogue-modes a:hover { text-decoration: underline; text-underline-offset: 4px; }
+.catalogue-compare > p { margin: 8px 0 18px; }
+.compare-theme { display: block; max-width: 300px; font-weight: 600; }
+.compare-edition { min-width: 0; }
+.catalogue-compare select {
+  width: 100%;
+  min-height: 43px;
+  font: inherit;
+  padding: 6px 30px 6px 10px;
+  margin-top: 4px;
+  background-color: var(--leaf);
+  border: 1px solid var(--line);
+  border-radius: 2px;
+}
+.catalogue-compare .compare-column {
+  border: 1px solid var(--line);
+  background: var(--leaf);
+  padding: clamp(14px, 2.4vw, 28px);
+}
+.compare-column img { display: block; width: 100%; height: auto; margin-bottom: 14px; }
+.compare-column h3 { margin: 5px 0 8px; }
+.compare-column h4 { margin: 18px 0 6px; }
+.compare-column li { padding-block: 7px; }
+.compare-column li p { margin-top: 4px; }
+.catalogue-actions { margin: 13px 0; }
+.catalogue-actions a { display: inline-block; margin: 0 15px 5px 0; }
+.edition-date { display: grid; gap: 4px; }
+.catalogue-swatch { display: block; width: 100%; max-width: 64px; height: auto; }
+.catalogue-swatch:not([src]) { display: none; }
+.archive :is(.catalogue-actions, .related-reading, .chapter-action) a,
+.catalogue-compare .other-edition { color: var(--berry); text-decoration: underline; text-underline-offset: 3px; }
+.catalogue-compare .other-edition { display: none; }
+.study :target { background: var(--leaf); outline: 2px solid var(--line); outline-offset: 4px; }
+.study .finding-context { margin-bottom: 7px; }
+.finding-context a { color: var(--berry); text-decoration: underline; text-underline-offset: 3px; }
 @media(max-width:830px) {
   .archive .nav-inner { align-items: flex-start; flex-direction: column; gap: 7px; height: auto; padding: 14px 0 8px; }
   .archive .nav-inner nav { min-height: 32px; flex-wrap: wrap; gap: 4px 15px; }
@@ -131,6 +179,7 @@
   .archive .footer-inner { flex-wrap: wrap; }
   .archive footer .brand { flex-basis: 100%; }
   .archive :is(.compare-pair,.thread-cols,.method-cols,.classification,.candidate-grid) { grid-template-columns: minmax(0,1fr); }
+  .catalogue-compare .other-edition { display: inline-block; margin-top: 8px; }
 }
 @media print {
   .archive .reading-hero { background: white; color: black; }

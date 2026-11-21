@@ -11,6 +11,9 @@
     <title>Megatrend Observatory</title>
     <link rel="icon" href="assets/mark.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="observatory.css" />
+    <link rel="stylesheet" href="navigation.css" />
+    <script defer src="navigation.js"></script>
+    <script defer src="data.js"></script>
     <script defer src="books.js"></script>
     <script defer src="futures.js"></script>
     <script defer src="threads.js"></script>
@@ -19,20 +22,14 @@
   </head>
   <body>
     <a class="skip" href="#main">Skip to content</a>
-    <header class="mast">
-      <a class="brand" href="#home" aria-label="Megatrend Observatory home"
-        ><i class="maker" aria-hidden="true"></i
-        ><span>Megatrend Observatory</span></a
-      >
-      <button class="menu-toggle" aria-expanded="false" aria-controls="menu">
-        Menu
-      </button>
-      <nav id="menu" aria-label="Main navigation">
-        <a href="#loom">The loom</a><a href="#book">Swatch book</a
-        ><a href="#watch">Six to watch</a><a href="#futures">Possible futures</a
-        ><a href="#guide">Field guide</a>
-      </nav>
-    </header>
+    <!-- site-header -->
+<header class="site-mast"><div class="site-width site-mast-inner"><a class="site-brand" href="index.html"><img src="assets/mark.svg" alt="" width="34" height="34">Megatrend Observatory</a>
+<button class="site-menu-toggle" type="button" aria-expanded="false" aria-controls="site-menu">Menu</button>
+<nav id="site-menu" class="site-menu" aria-label="Main navigation"><div class="site-main-links"><a data-nav="explore" href="#loom">Explore</a><a data-nav="books" href="history/index.html">Books &amp; reports</a><a data-nav="change" href="priorities/index.html">What’s changing</a><a data-nav="futures" href="#futures">Possible futures</a></div><div class="site-utility"><a data-nav="guide" href="#guide">Field guide</a><a data-nav="saved" href="#saved">Saved</a></div></nav></div></header>
+<nav class="site-subnav" data-section="explore" aria-label="Explore" hidden><div class="site-width"><a data-subnav="loom" href="#loom">By theme</a><a data-subnav="synthesis" href="synthesis/index.html">What changed</a><a data-subnav="explorer" href="explorer/index.html">By year</a></div></nav>
+<nav class="site-subnav" data-section="change" aria-label="What’s changing" hidden><div class="site-width"><a data-subnav="priorities" href="priorities/index.html">Six to watch</a><a data-subnav="next" href="next/index.html">Next generation</a></div></nav>
+<nav class="site-subnav" data-section="futures" aria-label="Possible futures" hidden><div class="site-width"><a data-subnav="futures" href="#futures">Test an assumption</a><a data-subnav="scenarios" href="scenarios/index.html">Read scenarios</a></div></nav>
+<!-- /site-header -->
     <main id="main" tabindex="-1">
       <noscript>
         <section class="wrap section">
@@ -46,15 +43,8 @@
         </section>
       </noscript>
     </main>
-    <footer>
-      <a class="brand" href="#home"
-        ><i class="maker" aria-hidden="true"></i
-        ><span>Megatrend Observatory</span></a
-      >
-      <div>
-        <a href="#saved">Saved threads</a
-        ><a href="#guide">About the collection</a>
-      </div>
-    </footer>
+    <!-- site-footer -->
+<footer class="site-foot"><div class="site-width site-foot-inner"><a class="site-brand" href="index.html"><img src="assets/mark.svg" alt="" width="34" height="34">Megatrend Observatory</a><div class="site-utility"><a data-nav="guide" href="#guide">Field guide</a><a data-nav="saved" href="#saved">Saved</a></div></div></footer>
+<!-- /site-footer -->
   </body>
 </html>

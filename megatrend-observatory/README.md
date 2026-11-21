@@ -4,7 +4,7 @@ Open `dist/index.html` in a browser to explore the textile edition. The site inc
 
 ## Explore the collection
 
-Choose **Follow a thread** to trace an idea through the decades. **Turn the cloth over** shows the publications behind that interpretation. In the **Swatch book**, compare any two of the 24 publications and trace a shared theme. **Possible futures** opens twelve assumptions and three scenarios. The six-horizon explorer is available from the homepage.
+Choose **Explore → By theme** to trace an idea through the decades. **See the sources** turns the cloth over to show the publications behind that interpretation. **Books & reports** brings together the 24 publications and lets you compare any two by theme. **What’s changing** includes six trends to watch and four candidates for the next generation. **Possible futures** connects twelve assumptions to three scenarios. **Explore → By year** opens the six-horizon explorer.
 
 ## Edit and serve
 
