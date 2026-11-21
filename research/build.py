@@ -9,6 +9,7 @@ from interpretation import PRIORITIES, OTHERS, THREADS, NEXT, ASSUMPTION_SOURCES
 from books import get_books
 from explorer import ALIASES, get_explorer
 from futures import get_futures
+from methods import CASE_STUDIES, METHOD_GROUPS, REVIEW, WORKFLOW
 from threads import TRAILS, get_threads
 
 ROOT = Path(__file__).resolve().parent
@@ -20,14 +21,15 @@ SECTIONS = {
     'explore': ('Explore', '/#loom', [
         ('loom', 'By theme', '/#loom'), ('synthesis', 'What changed', '/synthesis/'),
         ('explorer', 'By year', '/explorer/')]),
-    'books': ('Books & reports', '/history/', []),
+    'books': ('Books & reports', '/history/', [
+        ('history', 'Publication archive', '/history/'), ('methods', 'Methods', '/methods/')]),
     'change': ('What’s changing', '/priorities/', [
         ('priorities', 'Six to watch', '/priorities/'), ('next', 'Next generation', '/next/')]),
     'futures': ('Possible futures', '/#futures', [
         ('futures', 'Test an assumption', '/#futures'), ('scenarios', 'Read scenarios', '/scenarios/')]),
 }
 UTILITIES = [('guide', 'Field guide', '/#guide'), ('saved', 'Saved', '/#saved')]
-PAGE_SECTION = {'synthesis': 'explore', 'explorer': 'explore', 'history': 'books',
+PAGE_SECTION = {'synthesis': 'explore', 'explorer': 'explore', 'history': 'books', 'methods': 'books',
                 'priorities': 'change', 'next': 'change', 'scenarios': 'futures'}
 THREAD_RECORDS = {t['id']: t for t in get_threads()}
 FUTURES = get_futures()
@@ -177,6 +179,62 @@ def history():
     layout('history','Books & reports',intro,'1982–2026 · Publication history',modes+browse+compare,
            'What changed across the decades?','/synthesis/')
 
+def methods():
+    statistics = (
+        ('Identify and synthesise narrower trends', '31', '41.9%'),
+        ('Consult experts or stakeholders', '22', '29.7%'),
+        ('Use surveys', '11', '14.9%'),
+        ('Use a formal Delphi method', '12', '16.2%'),
+    )
+    rows = ''.join(f'<tr><th scope="row">{e(label)}</th><td>{count}</td><td>{share}</td></tr>'
+                   for label, count, share in statistics)
+    evidence = f'''<section class="method-block" id="review">
+<h2>What researchers reported doing</h2>
+<p>Naughtin and colleagues reviewed 267 publications from 1982 to 2022. Of the 254 studies that identified or applied megatrends, 180 (71%) did not explicitly describe their method. Desk research was the most common approach among those that did.</p>
+<table class="methods-statistics">
+<caption>Selected methods among the 74 studies that described their approach</caption>
+<thead><tr><th scope="col">Approach</th><th scope="col">Studies</th><th scope="col">Share</th></tr></thead>
+<tbody>{rows}</tbody></table>
+<p>Studies could use more than one method.</p>
+{sources([REVIEW])}</section>'''
+
+    groups = []
+    for key, title, entries in METHOD_GROUPS:
+        descriptions = ''.join(
+            f'<article class="method-entry"><h4>{e(name)}</h4>{para(copy)}{sources(refs)}</article>'
+            for name, copy, refs in entries
+        )
+        groups.append(f'<section id="{key}" class="methods-group"><h3>{e(title)}</h3>{descriptions}</section>')
+
+    examples = ''.join(
+        f'<article class="candidate"><p class="method-byline">{e(author)}</p><h3>{e(title)}</h3>'
+        f'{para(copy)}{sources([reference])}<p class="chapter-action">'
+        f'{link("/history/#" + key, author + " in the archive")}</p></article>'
+        for key, author, title, copy, reference in CASE_STUDIES
+    )
+    jumps = ''.join(link(url, label) for url, label in (
+        ('#review', 'What studies reported'), ('#methods', '17 methods'),
+        ('#examples', 'Six examples'), ('#workflow', 'A practical workflow'),
+    ))
+    group_jumps = ''.join(link('#' + key, title) for key, title, _ in METHOD_GROUPS)
+    workflow = ''.join(f'<div class="field"><h3>{e(title)}</h3>{para(copy)}</div>'
+                       for title, copy in WORKFLOW)
+    body = f'''<nav class="jump-links" aria-label="On this page">{jumps}</nav>
+<div class="chapter-intro"><p>Identifying a megatrend involves three kinds of work. <strong>Discovery</strong> surfaces candidate changes. <strong>Qualification</strong> tests whether they are durable, directional and far-reaching. <strong>Synthesis</strong> connects narrower trends and explains how wider changes interact. Studies often combine methods, and a single method can serve several purposes.</p></div>
+{evidence}
+<section id="methods" class="methods-section"><div class="chapter-intro"><h2>17 ways to identify megatrends</h2></div>
+<nav class="jump-links" aria-label="Method families">{group_jumps}</nav>
+{''.join(groups)}</section>
+<section id="examples" class="methods-section"><div class="chapter-intro"><h2>Six approaches in practice</h2></div>
+<div class="candidate-grid">{examples}</div></section>
+<section id="workflow" class="method-block"><h2>A practical workflow</h2>
+<div class="method-cols">{workflow}</div>
+<p>Use computational tools to surface overlooked patterns, then test the proposed mechanisms with historical evidence, independent sources and counterexamples. Keep emerging candidates alongside established megatrends so changes with thinner evidence stay visible while they are tested.</p>
+{related([('/next/', 'Explore four candidates for the next generation'), ('/scenarios/', 'Test the assumptions behind today’s megatrends')])}</section>'''
+    intro = 'How do researchers spot a change that could reshape society over decades? Explore approaches from newspaper clippings to AI-assisted analysis, and see how six studies put them together.'
+    layout('methods', 'How megatrends are identified', intro, 'Methods behind the megatrend lists',
+           body, 'Browse the books and reports', '/history/', hero_image='ledger')
+
 def synthesis():
     threads=''
     for i,(theme,old,opening,middle,question) in enumerate(THREADS):
@@ -184,6 +242,8 @@ def synthesis():
         follow = link('/#thread/'+tid, 'Explore '+label+' interactively')
         threads+=f'<details class="thread" id="thread-{theme.lower()}" {"open" if i==0 else ""}><summary><span>{e(theme)}</span><b>{e(old)}</b><span class="disclose" aria-hidden="true"></span></summary><div class="thread-body"><div class="thread-cols">{field("Earlier emphasis",opening)}{field("How it developed",middle)}{field("The question now",question)}</div><div class="references"><span>Trace the editions</span>{study_links(evidence)}</div><p class="chapter-action">{follow}</p></div></details>'
     methods='<section class="method-block" id="method"><h2>How do authors identify a megatrend?</h2><p>Naisbitt looked for patterns in local reporting. Oxfam compared existing scans. CSIRO assembled evidence about narrower changes and grouped them into larger shifts. Sitra asked what global changes mean for one society. Each starting point changes what becomes visible.</p><div class="method-cols">'+field("Discover","Scan newspapers and emerging signals, review studies and other outlooks, interview people, or analyse publication and patent records. Text mining, topic models and AI can help sort material. The selection of languages and sources affects what enters the pool.")+field("Test","Check duration, geographical reach, changes in indicators and plausible mechanisms. Historical comparison, projections, surveys, expert interviews, Delphi rounds and participatory workshops can expose weak evidence or regional exceptions.")+field("Connect and challenge","Cluster related trends, map causal links and interactions, and test them against counterexamples and scenarios. Record the evidence and disagreements. A vote can indicate shared expectations while leaving a causal claim untested.")+'</div><div class="references"><span>Method and examples</span>'+study_links(['naughtin-2024','oxfam-2020','csiro-2022','sitra-2026'])+'</div></section>'
+    methods = methods.removesuffix('</section>') + '<p class="chapter-action">' + link(
+        '/methods/', 'Explore the 17 methods and six case studies') + '</p></section>'
     body='<div class="chapter-intro"><h2>From optimistic modernisation to contested transformation</h2><p>In 1982, the move from hierarchies to networks could stand as a promise of personal agency. By 2026, the ownership of those networks had become a question of political power. Both propositions can hold at once. People acquire new freedoms while the institutions that connect them gain new powers.</p></div><div class="editor-note"><h3>What a change of list can tell us</h3><p>Three things can move independently: the world, the author’s vantage point and the language available to describe change. The 1990 book already paired global lifestyles with cultural nationalism. A US security outlook anticipated demographic divergence in 2008. Climate’s absence from the 1982 headlines says something about that book’s priorities. These selected publications establish a lineage. A claim of historical first discovery would require a much wider, multilingual search.</p></div><h2 class="section-title">Follow an idea through the decades</h2>'+threads+methods
     layout('synthesis','What changed?','Eight lines of thought connect the books and reports. Follow an idea to see the older proposition, the intervening change and the question it raises today.','Eight historical comparisons',body,'The six megatrends to watch','/priorities/')
 
@@ -287,6 +347,7 @@ if __name__ == '__main__':
     update_shell(DIST / 'index.html', prefix='')
     update_shell(DIST / 'explorer' / 'index.html', page='explorer')
     history()
+    methods()
     synthesis()
     priorities()
     next_gen()

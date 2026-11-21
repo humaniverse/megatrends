@@ -145,6 +145,7 @@
         'primary',
       ) +
       link(cataloguePath, 'Browse by decade', 'action') +
+      link('methods/index.html', 'How megatrends are identified', 'action') +
       '</div></div></div></section>' +
       '<section class="wrap section chapter-menu">' +
       [
@@ -557,7 +558,7 @@
           'Explore historical snapshots and possible futures, 1980–2050',
         ],
         [
-          'synthesis/index.html#method',
+          'methods/index.html',
           'See how researchers identify megatrends',
         ],
         ['next/index.html', 'Consider four candidates for the next generation'],

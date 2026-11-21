@@ -91,6 +91,34 @@
 .archive .classification .field { border-color: #be4784; }
 .archive .classification .field:nth-child(2) { border-color: #5841a3; }
 .archive .classification .field:nth-child(3) { border-color: #d49b29; }
+.archive-methods .methods-section { margin-block: clamp(36px, 5vw, 60px); }
+.archive-methods .methods-group {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 2.6fr);
+  gap: 0 clamp(20px, 4vw, 50px);
+  border-top: 1px solid var(--line);
+  padding-block: 22px;
+}
+.archive-methods .method-entry { grid-column: 2; padding-bottom: 16px; }
+.archive-methods .method-entry + .method-entry { padding-top: 16px; border-top: 1px solid var(--line); }
+.archive-methods .method-entry:last-child { padding-bottom: 0; }
+.archive-methods .method-entry h4 { font-size: 1.2rem; margin: 0 0 6px; }
+.archive-methods .method-entry .references { border: 0; padding: 0; margin-top: 8px; }
+.archive-methods .methods-statistics { border-collapse: collapse; margin-block: 16px 10px; }
+.archive-methods .methods-statistics caption { text-align: start; padding-bottom: 7px; }
+.archive-methods .methods-statistics :is(th, td) {
+  border-bottom: 1px solid var(--line);
+  padding: 7px clamp(6px, 1.6vw, 18px);
+  text-align: start;
+}
+.archive-methods .methods-statistics :is(th, td):first-child { padding-inline-start: 0; }
+.archive-methods .methods-statistics td { text-align: end; font-variant-numeric: tabular-nums; }
+.archive-methods .method-byline { color: var(--berry); margin: 0 0 5px; }
+.archive-methods .method-cols + p { margin-top: 20px; }
+@media (max-width: 660px) {
+  .archive-methods .methods-group { display: block; }
+  .archive-methods .methods-group > h3 { margin-bottom: 14px; }
+}
 .archive :is(.priority-index span,.compare .disclose,.study .disclose,.guide-content li,.relation-text) { color: var(--muted); }
 .archive footer { background: var(--dark); color: #f7eff8; border-color: var(--dark); }
 .archive footer a:not(.brand),.archive footer button { color: #eee2ee; font-size: 1rem; text-decoration: underline; text-underline-offset: 3px; }
