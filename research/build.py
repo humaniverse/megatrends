@@ -28,7 +28,7 @@ SECTIONS = {
     'futures': ('Possible futures', '/#futures', [
         ('futures', 'Test an assumption', '/#futures'), ('scenarios', 'Read scenarios', '/scenarios/')]),
 }
-UTILITIES = [('guide', 'Field guide', '/#guide'), ('saved', 'Saved', '/#saved')]
+UTILITIES = [('guide', 'Help', '/#guide'), ('saved', 'Saved', '/#saved')]
 PAGE_SECTION = {'synthesis': 'explore', 'explorer': 'explore', 'history': 'books', 'methods': 'books',
                 'priorities': 'change', 'next': 'change', 'scenarios': 'futures'}
 THREAD_RECORDS = {t['id']: t for t in get_threads()}

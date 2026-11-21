@@ -533,7 +533,7 @@
       header(
         '#home',
         'Home',
-        'Field guide',
+        'Help',
         'A first visit to the Observatory',
       ) +
       '<div class="wrap reader story">' +
