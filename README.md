@@ -4,7 +4,7 @@ Open `dist/index.html` in a browser to explore the textile edition. The site inc
 
 ## Explore the collection
 
-Choose **Explore → By theme** to trace an idea through the decades. **See the sources** turns the cloth over to show the publications behind that interpretation. **Books & reports** brings together the 24 publications and lets you compare any two by theme. **What’s changing** includes six trends to watch and four candidates for the next generation. **Possible futures** connects twelve assumptions to three scenarios. **Explore → By year** opens the six-horizon explorer.
+Choose **Explore → By theme** to trace an idea through the decades. **See the sources** turns the cloth over to show the publications behind that interpretation. **Books & reports** brings together the 24 publications and lets you compare any two by theme. **What’s changing** includes six trends to watch and four candidates for the next generation. **Possible futures** connects twelve assumptions to three scenarios. **Explore → By year** follows all eight research threads through six time horizons, with dated findings and links to possible futures.
 
 ## Edit and serve
 

@@ -93,6 +93,11 @@ html { scroll-padding-top: 80px; }
   .site-menu a { padding-block: 12px; white-space: normal; }
   .site-foot-inner { align-items: flex-start; flex-direction: column; }
 }
+@media (max-width: 360px) {
+  .site-mast-inner { column-gap: 6px; }
+  .site-mast .site-brand { font-size: 22px; }
+  .site-mast .site-menu-toggle { padding-inline: 4px; }
+}
 @media print {
   .site-mast, .site-subnav, .site-foot { display: none !important; }
 }

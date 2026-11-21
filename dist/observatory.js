@@ -3,6 +3,7 @@
   const books = window.OBS_BOOKS;
   const threads = window.OBS_THREADS;
   const future = window.OBS_FUTURES;
+  const explorerAliases = window.OBS_EXPLORER_ALIASES;
   const main = document.getElementById('main');
   const threadById = new Map(threads.map((t) => [t.id, t]));
   const bookById = new Map(books.map((b) => [b.id, b]));
@@ -160,7 +161,7 @@
         [
           'explorer/index.html',
           'By year',
-          'Move between 1980 and 2050 with six illustrated trends.',
+          'Follow the eight research threads from 1980 to possible futures in 2050.',
         ],
       ]
         .map(
@@ -185,7 +186,7 @@
       threads.map(threadLink).join('') +
       '</div><div class="page-end">' +
       link('synthesis/index.html', 'Read the historical synthesis', 'action') +
-      link('explorer/index.html', 'Explore six trends across time', 'action') +
+      link('explorer/index.html', 'Explore the threads by year', 'action') +
       '</div></div>'
     );
   }
@@ -286,6 +287,7 @@
         'action',
       ) +
       '</div>' + related([
+        ['explorer/index.html#trend/' + t.id, 'Explore this thread by year'],
         ['synthesis/index.html#thread-' + t.original.toLowerCase(), 'Read this thread in the historical synthesis'],
         ...(t.id === 'population' ? populationReading.slice(1) : future.watch
           .filter((item) => item.theme === t.id)
@@ -566,14 +568,15 @@
     );
   }
   function savedPage() {
-    const savedTrendIds = new Set(readSaved('longview.saved'));
-    const trends = TRENDS.filter((trend) => savedTrendIds.has(trend.id));
+    const savedTrendIds = new Set(readSaved('longview.saved').map((id) =>
+      Object.hasOwn(explorerAliases, id) ? explorerAliases[id] : id));
+    const trends = threads.filter((thread) => savedTrendIds.has(thread.id));
     return (
       header(
         '#home',
         'Home',
         'Saved',
-        'Revisit the themes and illustrated trends you’ve marked on this device.',
+        'Revisit the threads and timelines you’ve saved on this device.',
       ) +
       '<div class="wrap reader"><h2 class="text-heading">Saved threads</h2>' +
       (saved.length
@@ -593,14 +596,14 @@
           '</ul>'
         : '<p class="empty">Follow a thread and choose <strong>Save thread</strong> to keep it here.</p>') +
       link('#loom', 'Browse themes', 'action') +
-      '<h2 class="text-heading">Saved trends from By year</h2>' +
+      '<h2 class="text-heading">Saved timelines</h2>' +
       (trends.length
         ? '<ul class="saved-list">' + trends.map((trend) => '<li>' +
-          link('explorer/index.html#trend/' + trend.id, trend.name) + '</li>').join('') + '</ul>'
-        : '<p class="empty">Save a trend in the year explorer to see it here.</p>') +
+          link('explorer/index.html#trend/' + trend.id, trend.label) + '</li>').join('') + '</ul>'
+        : '<p class="empty">Bookmark a timeline in By year to see it here.</p>') +
       '<div class="page-end">' +
       (trends.length
-        ? link('explorer/index.html#saved', 'Manage saved trends', 'action')
+        ? link('explorer/index.html#saved', 'Manage saved timelines', 'action')
         : link('explorer/index.html', 'Explore by year', 'action')) +
       '</div></div>'
     );

@@ -7,6 +7,7 @@ import re
 
 from interpretation import PRIORITIES, OTHERS, THREADS, NEXT, ASSUMPTION_SOURCES
 from books import get_books
+from explorer import ALIASES, get_explorer
 from futures import get_futures
 from threads import TRAILS, get_threads
 
@@ -191,7 +192,8 @@ def priorities():
     cards=''
     for x, watch in zip(PRIORITIES, FUTURES['watch'], strict=True):
         thread = THREAD_RECORDS[watch['theme']]
-        paths = [('/#thread/'+thread['id'], 'Follow the '+thread['label']+' thread')]
+        paths = [('/#thread/'+thread['id'], 'Follow the '+thread['label']+' thread'),
+                 ('/explorer/#trend/'+thread['id'], 'See the '+thread['label']+' timeline')]
         if thread['id'] == 'population':
             paths += [POPULATION_LINKS[1], POPULATION_LINKS[3]]
         paths += [('/#watch/'+watch['id'], 'Compare the earlier and current patterns')]
@@ -205,9 +207,12 @@ def next_gen():
     items=''
     paths = {
         'discovery': [('/priorities/#machine-agency','AI becoming autonomous infrastructure')],
-        'physical': [('/#thread/climate','Follow the Climate & place thread'), ('/scenarios/#abundance','Test the resource scarcity assumption')],
-        'orbit': [('/priorities/#network-power','Read about network power')],
-        'contract': [('/#thread/health','Follow the Health & care thread'), ('/scenarios/#longevity','Test the longevity assumption')],
+        'physical': [('/#thread/climate','Follow the Climate & place thread'), ('/scenarios/#abundance','Test the resource scarcity assumption'),
+                     ('/explorer/index.html?year=2040#trend/climate', 'Explore competition for grid capacity in 2040')],
+        'orbit': [('/priorities/#network-power','Read about network power'),
+                  ('/explorer/index.html?year=2050#trend/networks','Explore a clinic’s reliance on a satellite operator in 2050')],
+        'contract': [('/#thread/health','Follow the Health & care thread'), ('/scenarios/#longevity','Test the longevity assumption'),
+                     ('/explorer/index.html?year=2050#trend/health','Explore how work and care could change in 2050')],
     }
     for (i,name,roots,imp,watch,refs), candidate in zip(NEXT, FUTURES['candidates'], strict=True):
         items+=f'<article class="candidate" id="{i}"><h2>{e(name)}</h2>{field("Where the idea comes from",roots)}{field("What might follow",imp)}<div class="signal">{field("What would strengthen or weaken the case",watch)}</div>{para(candidate["question"])}{sources(refs)}{related(paths[i])}</article>'
@@ -220,7 +225,7 @@ def scenarios():
     cards=''
     for i,s in enumerate(STRESS['scenarios']):
         linked=' · '.join(link('#'+k,alts[k]) for k in s['links'])
-        paths = POPULATION_LINKS[:3] if s['id'] == 'demographic-inversion' else []
+        paths = POPULATION_LINKS[:3] + [('/explorer/index.html?year=2040#trend/population', 'Follow demographic divergence through time')] if s['id'] == 'demographic-inversion' else []
         cards+=f'''<article class="scenario" id="{s['id']}"><div class="scenario-art">{plate(['energy','work','population'][i])}</div><div class="scenario-copy"><span class="r-label">Illustrative 2040 scenario</span><h3>{e(s['title'])}</h3><p class="vignette">{e(s['vignette'])}</p>{field('How this could happen',s['mechanism'])}{field('Who gains and who could lose',s['distribution'])}{field('Early signs',s['watch'])}<div class="references"><span>Assumptions in play</span>{linked}</div>{related(paths)}</div></article>'''
     rows=''
     for a, interactive in zip(STRESS['assumptions'], FUTURES['assumptions'], strict=True):
@@ -264,7 +269,8 @@ def write_textile_data():
     files = {
         "books": {"OBS_BOOKS": books},
         "futures": {"OBS_FUTURES": futures},
-        "threads": {"OBS_THREADS": threads, "OBS_ERAS": ERAS},
+        "threads": {"OBS_THREADS": threads, "OBS_ERAS": ERAS, "OBS_EXPLORER_ALIASES": ALIASES},
+        "data": {"OBS_EXPLORER": get_explorer(books, threads, futures)},
     }
     for filename, variables in files.items():
         script = "".join(

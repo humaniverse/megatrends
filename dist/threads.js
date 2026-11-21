@@ -182,3 +182,9 @@ window.OBS_ERAS = {
     "Reports foreground adaptation, rivalry, the reliability of information and the authority delegated to machines. The remit still shapes the list. A humanitarian or development lens foregrounds distribution, while an investment outlook distinguishes technologies that attract capital."
   ]
 };
+window.OBS_EXPLORER_ALIASES = {
+  "intelligence": "technology",
+  "cities": "population",
+  "work": "technology",
+  "energy": "climate"
+};
