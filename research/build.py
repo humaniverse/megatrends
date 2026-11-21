@@ -77,8 +77,9 @@ def related(items, label='Keep exploring'):
     return '<nav class="related-reading" aria-label="'+e(label)+'"><strong>'+e(label)+'</strong><ul>'+''.join(
         '<li>'+link(url, title)+'</li>' for url, title in items)+'</ul></nav>'
 
-def plate(path):
-    return f'<img src="../assets/{path}.webp" alt="" loading="lazy">'
+def plate(path, *, size=None):
+    dimensions = f' width="{size[0]}" height="{size[1]}"' if size else ''
+    return f'<img src="../assets/{path}.webp" alt=""{dimensions} loading="lazy">'
 
 def nav_link(key, label, url, prefix, current=None, attribute='data-nav', status='page'):
     active = f' aria-current="{status}"' if key == current else ''
@@ -128,10 +129,10 @@ def para(s):
 def field(title, copy):
     return f'<div class="field"><h4>{e(title)}</h4>{para(copy)}</div>'
 
-def hero(slug, title, intro, caption):
-    return f'<section class="reading-hero"><div class="container reading-hero-inner"><div>{breadcrumbs(slug, title)}<h1>{e(title)}</h1><p>{e(intro)}</p></div><figure><img src="../assets/jacquard.webp" alt=""><figcaption>{e(caption)}</figcaption></figure></div></section>'
+def hero(slug, title, intro, caption, image):
+    return f'<section class="reading-hero"><div class="container reading-hero-inner"><div>{breadcrumbs(slug, title)}<h1>{e(title)}</h1><p>{e(intro)}</p></div><figure><img src="../assets/{image}.webp" alt=""><figcaption>{e(caption)}</figcaption></figure></div></section>'
 
-def layout(slug, heading, intro, caption, body, next_label, next_url):
+def layout(slug, heading, intro, caption, body, next_label, next_url, *, hero_image='jacquard'):
     header, footer = shell(slug)
     skip_label = 'Skip to catalogue' if slug == 'history' else 'Skip to chapter'
     scripts = ('books', 'threads', 'weaves', 'catalogue') if slug == 'history' else ('research',)
@@ -142,7 +143,7 @@ def layout(slug, heading, intro, caption, body, next_label, next_url):
 <link rel="canonical" href="{SITE}/{slug}/"><link rel="icon" href="../assets/mark.svg"><link rel="stylesheet" href="../style.css"><link rel="stylesheet" href="../research.css"><link rel="stylesheet" href="../archive.css"><link rel="stylesheet" href="../navigation.css"><script src="../navigation.js" defer></script>{scripts}
 </head><body class="research-page archive archive-{slug}"><a class="skip" href="#reading">{skip_label}</a>
 {header}
-<main>{hero(slug,heading,intro,caption)}<div id="reading" class="container reading" tabindex="-1">{body}
+<main>{hero(slug,heading,intro,caption,hero_image)}<div id="reading" class="container reading" tabindex="-1">{body}
 <div class="continue"><span>Continue exploring</span>{link(next_url,next_label)}</div></div></main>
 {footer}</body></html>'''
     folder=DIST/slug
@@ -223,10 +224,11 @@ def next_gen():
 def scenarios():
     alts={s['id']:s['alternative'] for s in STRESS['assumptions']}
     cards=''
-    for i,s in enumerate(STRESS['scenarios']):
+    for s in STRESS['scenarios']:
         linked=' · '.join(link('#'+k,alts[k]) for k in s['links'])
         paths = POPULATION_LINKS[:3] + [('/explorer/index.html?year=2040#trend/population', 'Follow demographic divergence through time')] if s['id'] == 'demographic-inversion' else []
-        cards+=f'''<article class="scenario" id="{s['id']}"><div class="scenario-art">{plate(['energy','work','population'][i])}</div><div class="scenario-copy"><span class="r-label">Illustrative 2040 scenario</span><h3>{e(s['title'])}</h3><p class="vignette">{e(s['vignette'])}</p>{field('How this could happen',s['mechanism'])}{field('Who gains and who could lose',s['distribution'])}{field('Early signs',s['watch'])}<div class="references"><span>Assumptions in play</span>{linked}</div>{related(paths)}</div></article>'''
+        art = plate(f"scenario-{s['id']}", size=(800, 1000))
+        cards+=f'''<article class="scenario" id="{s['id']}"><div class="scenario-art">{art}</div><div class="scenario-copy"><span class="r-label">Illustrative 2040 scenario</span><h3>{e(s['title'])}</h3><p class="vignette">{e(s['vignette'])}</p>{field('How this could happen',s['mechanism'])}{field('Who gains and who could lose',s['distribution'])}{field('Early signs',s['watch'])}<div class="references"><span>Assumptions in play</span>{linked}</div>{related(paths)}</div></article>'''
     rows=''
     for a, interactive in zip(STRESS['assumptions'], FUTURES['assumptions'], strict=True):
         paths = [('/#futures/'+interactive['id']+'/loose','Explore this assumption interactively')]
@@ -238,7 +240,7 @@ def scenarios():
     quick='<div class="jump-links">'+link('#assumptions','Twelve assumptions')+link('#three-futures','Three compound scenarios')+'</div>'
     scenario_index='<nav aria-label="Jump to a scenario" class="jump-links">'+''.join(link('#'+s['id'],s['title']) for s in STRESS['scenarios'])+'</nav>'
     body=quick+'<section id="assumptions"><div class="chapter-intro"><h2>Twelve assumptions that could unravel</h2><p>For each one, distinguish the measurable change from the consequence people have come to expect. An older population is observable. A heavier burden on younger people depends on health, work, care and public policy.</p></div>'+rows+'</section>'+climate+'<section id="three-futures"><div class="chapter-intro"><h2>Three compound scenarios</h2><p>These imagined scenes combine several reversals. They have no assigned probabilities. Read each one as a test of the decisions an institution might make today.</p></div>'+scenario_index+cards+'</section><div class="method-block"><h2>Try the hindsight question</h2><p>Imagine a team in 2040 reading your strategy today. Which assumption did you get wrong? What early evidence did you overlook? Choose an indicator that would help you recognise the change in time.</p></div>'
-    layout('scenarios','Assumptions & scenarios',intro,'Twelve reversals · Three possible futures',body,'See the illustrated trends by year','/explorer/')
+    layout('scenarios','Assumptions & scenarios',intro,'Twelve reversals · Three possible futures',body,'See the illustrated trends by year','/explorer/',hero_image='scenarios-hero')
 
 def write_textile_data():
     books = BOOKS

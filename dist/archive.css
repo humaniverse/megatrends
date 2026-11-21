@@ -60,7 +60,7 @@
 .archive .reading-hero figure img { aspect-ratio: 2.5; object-fit: cover; object-position: center 40%; }
 .archive-synthesis .reading-hero figure img { object-position: center 10%; }
 .archive-next .reading-hero figure img { object-position: center 75%; }
-.archive-scenarios .reading-hero figure img { object-position: center 85%; }
+.archive-scenarios .reading-hero figure img { object-position: center; }
 .archive .reading-hero figcaption { color: #e9c773; font-size: .94rem; padding: 7px 0 0; }
 .archive .chapter-nav, .archive .research-band { background: var(--fold); border-color: var(--line); }
 .archive .chapter-nav a,.archive .research-band a { color: var(--ink); font-size: 1rem; }
@@ -80,6 +80,9 @@
 .archive :is(.editor-note,.method-block,.study-body,.signal,.guide-ex) { background: var(--fold); border-color: var(--line); }
 .archive :is(.study-body,.method-block,.editor-note,.compare,.candidate,.compare-column,.scenario) { border-radius: 2px; }
 .archive :is(.compare,.compare-column,.candidate,.scenario,.priority-index a,.jump-links a) { background: var(--leaf); border-color: var(--line); }
+.archive-scenarios .scenario { grid-template-columns: minmax(0,3fr) minmax(0,5fr); }
+.archive-scenarios .scenario-art { position: relative; background: var(--dark); }
+.archive-scenarios .scenario-art img { position: absolute; inset: 0; height: 100%; object-fit: cover; }
 .archive :is(.era,.priority,.entries li,.archive-tools input,.archive-tools select,.compare select) { border-color: var(--line); }
 .archive :is(.archive-tools input,.archive-tools select,.compare select) { color: var(--ink); background-color: var(--leaf); }
 .archive :is(.priority-index a:hover,.jump-links a:hover,.study>summary:hover,.assumption>summary:hover,.thread>summary:hover) { background: var(--fold); border-color: #a88bb1; }
@@ -95,7 +98,7 @@
 .horizon-page .hero-inner { display: grid; grid-template-columns: minmax(0,.92fr) minmax(250px,1fr); gap: clamp(35px,7vw,95px); min-height: 310px; padding: 34px 0; }
 .horizon-page .hero-copy { width: auto; padding: 0; }
 .horizon-page .intro-button { background: var(--lime); color: var(--ink); border: 0; border-radius: 2px; font-size: 1rem; }
-.horizon-page .timeline-art img { width: 100%; display: block; height: clamp(130px,15vw,230px); object-fit: cover; object-position: 50% 66%; }
+.horizon-page .timeline-art img { width: 100%; display: block; height: auto; aspect-ratio: 2.5; object-fit: cover; }
 .horizon-page .time-strip { background: var(--leaf); }
 .horizon-page .time-track:before { background: #93819f; }
 .horizon-page .time-track:after { background: repeating-linear-gradient(90deg,#93819f 0 3px,var(--leaf) 3px 7px); }
@@ -107,6 +110,7 @@
 .horizon-page .filter[aria-pressed=true] { background: var(--dark); color: var(--leaf); }
 .horizon-page .trend-card { border-color: var(--line); border-radius: 2px; background: var(--leaf); }
 .horizon-page .trend-card:hover { border-color: #8f6691; box-shadow: none; transform: none; }
+.horizon-page .plate::before, .horizon-page .plate::after { content: none; }
 .horizon-page .card-domain { position: static; margin-bottom: 8px; }
 .horizon-page .thread-dot { width: 8px; height: 8px; flex: none; border-radius: 50%; }
 .horizon-page .bookmark { background: var(--leaf); color: var(--ink); }
@@ -180,12 +184,17 @@
   .archive .nav-inner nav { min-height: 32px; flex-wrap: wrap; gap: 4px 15px; }
   .archive .nav-item { padding: 5px 0; min-height: 32px; }
 }
+@media(max-width:800px) {
+  .archive-scenarios .scenario { display: block; }
+  .archive-scenarios .scenario-art { height: auto; aspect-ratio: 3 / 2; }
+  .archive-scenarios #age-of-abundance .scenario-art img { object-position: center 60%; }
+}
 @media(max-width:660px) {
   .archive .reading-hero-inner { min-height: 0; display: block; padding: 30px 0; }
   .archive .reading-hero p { font-size: 1.08rem; }
+  .archive-scenarios .reading-hero figure { display: block; margin-top: 22px; }
   .archive .chapter-nav a { font-size: .96rem; }
   .horizon-page .hero-inner { min-height: 0; grid-template-columns: 1fr; gap: 22px; padding: 26px 0 20px; }
-  .horizon-page .timeline-art img { height: 96px; }
   .archive .footer-inner { flex-wrap: wrap; }
   .archive footer .brand { flex-basis: 100%; }
   .archive :is(.compare-pair,.thread-cols,.method-cols,.classification,.candidate-grid) { grid-template-columns: minmax(0,1fr); }
@@ -194,4 +203,5 @@
 @media print {
   .archive .reading-hero { background: white; color: black; }
   .archive .reading-hero p { color: black; }
+  .archive-scenarios .scenario-art { height: auto; aspect-ratio: 2.5; }
 }

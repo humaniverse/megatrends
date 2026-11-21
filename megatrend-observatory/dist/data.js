@@ -33,7 +33,7 @@ window.OBS_EXPLORER = {
   ],
   "stories": {
     "technology": {
-      "image": "intelligence",
+      "image": "timeline-technology",
       "snapshots": {
         "1980": {
           "headline": "From the factory floor to the computer terminal",
@@ -148,7 +148,7 @@ window.OBS_EXPLORER = {
       }
     },
     "trade": {
-      "image": "work",
+      "image": "timeline-trade",
       "snapshots": {
         "1980": {
           "headline": "A local factory depends on overseas orders",
@@ -266,7 +266,7 @@ window.OBS_EXPLORER = {
       }
     },
     "climate": {
-      "image": "climate",
+      "image": "timeline-climate",
       "snapshots": {
         "1980": {
           "headline": "Climate research crosses borders",
@@ -388,7 +388,7 @@ window.OBS_EXPLORER = {
       }
     },
     "population": {
-      "image": "population",
+      "image": "timeline-population",
       "snapshots": {
         "1980": {
           "headline": "Families and jobs move towards the Sun Belt",
@@ -506,7 +506,7 @@ window.OBS_EXPLORER = {
       }
     },
     "power": {
-      "image": "ledger",
+      "image": "timeline-power",
       "snapshots": {
         "1980": {
           "headline": "Residents ask for a direct say",
@@ -610,7 +610,7 @@ window.OBS_EXPLORER = {
       }
     },
     "information": {
-      "image": "jacquard",
+      "image": "timeline-information",
       "snapshots": {
         "1980": {
           "headline": "Finding the right information becomes part of the job",
@@ -721,7 +721,7 @@ window.OBS_EXPLORER = {
       }
     },
     "networks": {
-      "image": "cities",
+      "image": "timeline-networks",
       "snapshots": {
         "1980": {
           "headline": "Workers can coordinate across the organisation chart",
@@ -832,7 +832,7 @@ window.OBS_EXPLORER = {
       }
     },
     "health": {
-      "image": "earth",
+      "image": "timeline-health",
       "snapshots": {
         "1980": {
           "headline": "More responsibility for care moves to families and neighbours",

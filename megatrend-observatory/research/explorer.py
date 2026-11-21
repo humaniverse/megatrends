@@ -15,7 +15,7 @@ ALIASES = {"intelligence": "technology", "cities": "population", "work": "techno
 # Each stage pairs an editorial headline and decision with dated evidence.
 # The optional last value points to an interpretation, assumption or scenario.
 STORIES = {
-    "technology": ("intelligence", [
+    "technology": ("timeline-technology", [
         ("From the factory floor to the computer terminal",
          "An employer moving records onto computers has to decide who gets trained for the new jobs and what happens to the workers whose old roles disappear.",
          [("naisbitt-1982", "From factories to information work")]),
@@ -35,7 +35,7 @@ STORIES = {
          "If software handles routine claims, a council could give named caseworkers the time and power to fix exceptions. A right to appeal depends on whether residents can reach someone who can act.",
          [("sitra-2026", "AI enters society’s core institutions")], ("assumption", "offline")),
     ]),
-    "trade": ("work", [
+    "trade": ("timeline-trade", [
         ("A local factory depends on overseas orders",
          "A town deciding whether to train more apprentices has to consider demand and investment decisions made far beyond its borders.",
          [("naisbitt-1982", "National economies become interdependent")]),
@@ -55,7 +55,7 @@ STORIES = {
          "If clean power and local workshops make water treatment cheaper, a utility could use the savings to cut bills or extend the pipes. Households outside the network have more to gain from the second choice.",
          [("ey-2026", "Rebalancing capitalism")], ("assumption", "abundance")),
     ]),
-    "climate": ("climate", [
+    "climate": ("timeline-climate", [
         ("Climate research crosses borders",
          "A weather service can contribute its observations to a shared record. What would scientists need to compare before telling a coastal authority to plan for a different climate?",
          [("conference-1979",)]),
@@ -75,7 +75,7 @@ STORIES = {
          "One town could repair its defences while another pays households to move. Counting flood deaths alone would miss displaced renters, uninsured losses and long breaks in care.",
          [("defra-2024", "Accelerating human-caused warming")], ("priority", "climate-reorganisation")),
     ]),
-    "population": ("population", [
+    "population": ("timeline-population", [
         ("Families and jobs move towards the Sun Belt",
          "A growing school district in the southern United States needs classrooms. A district losing families has to decide how long it can keep several schools open.",
          [("naisbitt-1982", "The American Sun Belt gains weight")]),
@@ -96,7 +96,7 @@ STORIES = {
          "A city with fewer households still has water mains to maintain. Should its utility raise bills, consolidate the network or ask the national government to share the cost?",
          [("cifs-2026", "New patterns of urban growth")], ("assumption", "cities")),
     ]),
-    "power": ("ledger", [
+    "power": ("timeline-power", [
         ("Residents ask for a direct say",
          "A town debating a road or school closure can leave the decision to elected representatives or give affected residents a role in setting the options. Who can take part in either route?",
          [("naisbitt-1982", "Citizens seek a direct say")]),
@@ -116,7 +116,7 @@ STORIES = {
          "If households fund a local flood mutual, they will have to decide who can join, how losses are shared and when they need public backing.",
          [("ey-2026", "Rebalancing capitalism")], ("assumption", "collectivism")),
     ]),
-    "information": ("jacquard", [
+    "information": ("timeline-information", [
         ("Finding the right information becomes part of the job",
          "As customer records move between teams, a company has to decide who can correct an error and how colleagues will know which copy to trust.",
          [("naisbitt-1982", "From factories to information work")]),
@@ -136,7 +136,7 @@ STORIES = {
          "If secure digital verification becomes standard, a clinic could still accept a patient in person when records are lost or disputed. How much staff time would it take to keep both routes usable?",
          [("csiro-2022", "Human needs and trust")], ("assumption", "offline")),
     ]),
-    "networks": ("cities", [
+    "networks": ("timeline-networks", [
         ("Workers can coordinate across the organisation chart",
          "A team relying on an informal network can solve a problem without asking several managers. Who can see the decision later and take responsibility for it?",
          [("naisbitt-1982", "Networks challenge hierarchies")]),
@@ -156,7 +156,7 @@ STORIES = {
          "If a satellite service becomes the clinic’s main connection, it could negotiate emergency access and pay to maintain a second route. Who decides whether the service stays available during a dispute?",
          [("mckinsey-2026", "Space technologies")], ("candidate", "orbit")),
     ]),
-    "health": ("earth", [
+    "health": ("timeline-health", [
         ("More responsibility for care moves to families and neighbours",
          "A community replacing some institutional support with local care has to decide who does the work, how they are trained and who helps when they need a break.",
          [("naisbitt-1982", "From institutional provision to self-help")]),
