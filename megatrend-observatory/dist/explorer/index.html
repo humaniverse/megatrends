@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#261b32">
+<meta name="description" content="Explore the evolution of megatrends from the 1982 book to 2026 reports. Compare publications, follow six emerging changes and test alternative futures.">
+<title>Through the years · Megatrend Observatory</title>
+<link rel="canonical" href="https://megatrend-observatory.matthewgthomas.chatgpt.site/explorer/">
+<link rel="icon" type="image/svg+xml" href="../assets/mark.svg">
+<link rel="preload" href="../assets/inter.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../style.css"><link rel="stylesheet" href="../research.css"><link rel="stylesheet" href="../archive.css">
+<script src="../data.js" defer></script><script src="../app.js" defer></script>
+</head>
+<body class="archive horizon-page">
+<a class="skip" href="#index">Skip to the trend index</a>
+<header class="masthead"><div class="container nav-inner">
+<a href="../index.html" class="brand"><img src="../assets/mark.svg" alt="" width="33" height="33">Megatrend Observatory</a>
+<nav class="home-nav" aria-label="Main navigation">
+<button class="nav-item active" id="explorer-nav" aria-current="page"><i data-i="orbit"></i><span>By year</span></button>
+<a class="nav-item" href="../index.html#book">Swatch book</a>
+<button class="nav-item" data-guide><i data-i="book"></i><span>Field guide</span></button>
+<span class="nav-divider"></span>
+<button class="nav-item" id="saved-nav"><i data-i="bookmark"></i><span>Saved</span><span class="saved-count">0</span></button>
+</nav></div></header>
+<main>
+<section class="hero" aria-labelledby="hero-title">
+<div class="container hero-inner">
+<div class="hero-copy">
+<h1 id="hero-title">Through the years</h1>
+<p class="hero-intro">See how six long-term changes touch ordinary lives. Choose a year to visit its world, or step forward to one of the possible futures of 2040 and 2050.</p>
+<button class="intro-button" data-guide>How to read the timeline</button>
+</div>
+<div class="thread-filters" aria-label="Browse by theme">
+<img src="../assets/jacquard.webp" alt="">
+<div class="thread-controls"><span>Follow a theme</span><div>
+<button data-orbit="Technology">Technology</button><button data-orbit="Society">Society</button><button data-orbit="Environment">Environment</button><button data-orbit="Economy">Economy</button>
+</div></div>
+</div>
+</div>
+</section>
+<section class="research-band" aria-label="Research chapters"><div class="container"><h2>Explore the research</h2><nav aria-label="Browse the research"><a href="../history/index.html">Books &amp; reports</a><a href="../synthesis/index.html">What changed</a><a href="../priorities/index.html">Six to watch</a><a href="../next/index.html">Next generation</a><a href="../scenarios/index.html">Assumptions &amp; scenarios</a></nav></div></section>
+<section class="time-strip" aria-labelledby="time-heading"><div class="container time-inner">
+<div class="time-intro"><div class="time-title"><i data-i="time"></i><h2 id="time-heading">Time horizon</h2></div><p>Select a year to explore.</p></div>
+<div class="time-track" id="main-years" role="group" aria-label="Explore a time horizon"></div>
+</div></section>
+<section class="atlas container" id="index" aria-labelledby="index-title" tabindex="-1">
+<div class="index-heading"><div class="index-name"><h2 id="index-title">Illustrated trend index</h2><span id="result-count" class="number-tag">06</span></div>
+<button class="shuffle" id="shuffle"><i data-i="shuffle"></i><span>Surprise me</span></button></div>
+<div class="index-tools"><div class="filters" role="group" aria-label="Filter trends by theme"></div>
+<div class="view-toggle" role="group" aria-label="Display mode"><button id="grid-view" aria-label="Grid view" title="Grid view" aria-pressed="true"><i data-i="grid"></i></button><button id="list-view" aria-label="List view" title="List view" aria-pressed="false"><i data-i="list"></i></button></div></div>
+<div class="cards" id="cards"></div>
+<div class="sr" aria-live="polite" id="announce"></div>
+</section>
+</main>
+<footer><div class="container footer-inner"><a href="../index.html" class="brand footer-brand"><img src="../assets/mark.svg" width="25" height="25" alt="">Megatrend Observatory</a><button data-guide>Field guide &amp; sources</button></div></footer>
+<dialog id="panel" aria-labelledby="panel-title"><div id="panel-body"></div></dialog>
+<noscript><p>This interactive atlas needs JavaScript to show its timelines and trend cards. A megatrend is a lasting change that affects many places and parts of life.</p></noscript>
+</body></html>
